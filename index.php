@@ -113,7 +113,8 @@ if(isset($_SESSION['id_usuario']) && empty($_SESSION['id_usuario'])==false){
                         <nav id="submenuDespesa">
                             <ul class="nav flex-column">
                                 <li class="nav-item"> <a href="despesas/despesas.php" class="nav-link"> Listar Lançamentos </a> </li>
-                                <li class="nav-item"> <a href="despesas/form-nova-despesa.php" class="nav-link"> Nova Despesa(Custo) </a> </li>
+                                <li class="nav-item"> <a href=".despesas/form-nova-despesa.php" class="nav-link"> Nova Despesa(Custo) </a> </li>
+                                <li class="nav-item"> <a href="despesas/gerar-planilha.php" class="nav-link"> Gerar Relatório </a> </li>
                             </ul>
                         </nav>
                     </div> 
