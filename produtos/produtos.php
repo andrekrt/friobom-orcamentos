@@ -136,6 +136,7 @@ if(isset($_SESSION['id_usuario']) && empty($_SESSION['id_usuario'])==false){
                                     <th scope="col" class="text-center text-nowrap">Produto/Serviço</th>
                                     <th scope="col" class="text-center text-nowrap"> Código de Barras</th>
                                     <th scope="col" class="text-center text-nowrap">Categoria</th>
+                                    <th scope="col" class="text-center text-nowrap">Tipo</th>
                                     <th scope="col" class="text-center text-nowrap"> Ações</th>
                                 </tr>
                             </thead>
@@ -157,6 +158,7 @@ if(isset($_SESSION['id_usuario']) && empty($_SESSION['id_usuario'])==false){
                                     <td scope="col" class="text-center text-nowrap"> <?php echo $dado['nome_peca_servico']; ?> </td>
                                     <td scope="col" class="text-center text-nowrap"> <?php echo $dado['cod_barra']; ?> </td>
                                     <td scope="col" class="text-center text-nowrap"> <?php echo $dado['nome_categoria']; ?> </td>
+                                    <td scope="col" class="text-center text-nowrap"> <?php echo $dado['tipo_produto']; ?> </td>
                                     <td scope="col" class="text-center text-nowrap">
                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal<?php echo $dado['idpeca_servico']; ?>" data-whatever="@mdo" value="<?php echo $dado['idpeca_servico']; ?>" name="idpeca_servico" >Visualisar</button>
                                     </td>
@@ -192,10 +194,10 @@ if(isset($_SESSION['id_usuario']) && empty($_SESSION['id_usuario'])==false){
                                                         </div>
                                                     </div>   
                                                     <div class="form-row">
-                                                        <div class="form-group col-md-12">
+                                                        <div class="form-group col-md-6">
                                                             <label for="categoria" class="col-form-label">Categoria</label>
                                                             <select name="categoria" class="form-control" id="categoria">
-                                                                <option value="<?php echo $dado['idcategoria'] ?>"> <?php echo $dado['nome_categoria'] ?> </option>
+                                                                <option value="<?php echo $dado['idcategoria']; ?>"> <?php echo $dado['nome_categoria']; ?> </option>
                                                                 <?php 
                                                                 
                                                                     $consulta = $db->query("SELECT * FROM categoria");
@@ -203,12 +205,20 @@ if(isset($_SESSION['id_usuario']) && empty($_SESSION['id_usuario'])==false){
 
                                                                     foreach($categorias as $categoria){
                                                                 ?>
-                                                                <option value="<?php echo $categoria['idcategoria'] ?>"><?php echo $categoria['nome_categoria'] ?></option>
+                                                                <option value="<?php echo $categoria['idcategoria']; ?>"><?php echo $categoria['nome_categoria']; ?></option>
                                                                 <?php        
 
                                                                     }
 
                                                                 ?>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <label for="tipoProduto" class="col-form-label">Tipo Produto</label>
+                                                            <select name="tipoProduto" class="form-control" id="tipoProduto">
+                                                                <option value="<?php echo $dado['tipo_produto'] ?>"> <?php echo $dado['tipo_produto'] ?> </option>
+                                                                <option value="Patrimônio">Patrimônio</option>
+                                                                <option value="Despesa">Despesa</option>
                                                             </select>
                                                         </div>
                                                     </div>       

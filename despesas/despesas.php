@@ -125,7 +125,7 @@ if(isset($_SESSION['id_usuario']) && empty($_SESSION['id_usuario'])==false){
                         <img src="../assets/images/icones/despesa.png" alt="">
                    </div>
                    <div class="title">
-                        <h2>PDespesas Lançadas</h2>
+                        <h2>Despesas Lançadas</h2>
                    </div>
                 </div>
                 <!-- dados exclusivo da página-->
@@ -158,7 +158,7 @@ if(isset($_SESSION['id_usuario']) && empty($_SESSION['id_usuario'])==false){
                                 $qtdPorPagina = 10;
                                 $numPaginas = ceil($totalProduto/$qtdPorPagina);
                                 $paginaInicial = ($qtdPorPagina*$pagina)-$qtdPorPagina;
-                                $limitado = $db->query("SELECT * FROM lancamento LEFT JOIN setor ON lancamento.setor_idsetor = setor.idsetor LEFT JOIN categoria ON lancamento.categoria_idcategoria = categoria.idcategoria LEFT JOIN produto_servico ON lancamento.peca_servico_idpeca_servico = produto_servico.idpeca_servico LEFT JOIN fornecedor ON lancamento.fornecedor_idfornecedor = fornecedor.idfornecedor LEFT JOIN usuarios ON lancamento.usuarios_idusuarios = usuarios.idusuarios ORDER BY idlancamento DESC LIMIT $paginaInicial,$qtdPorPagina ");
+                                $limitado = $db->query("SELECT * FROM lancamento LEFT JOIN setor ON lancamento.setor_idsetor = setor.idsetor LEFT JOIN produto_servico ON lancamento.peca_servico_idpeca_servico = produto_servico.idpeca_servico LEFT JOIN categoria ON produto_servico.categoria_idcategoria = categoria.idcategoria LEFT JOIN fornecedor ON lancamento.fornecedor_idfornecedor = fornecedor.idfornecedor LEFT JOIN usuarios ON lancamento.usuarios_idusuarios = usuarios.idusuarios ORDER BY idlancamento DESC LIMIT $paginaInicial,$qtdPorPagina ");
                                 
                                 if($limitado->rowCount()>0){
                                     $dados = $limitado->fetchAll();
@@ -175,13 +175,15 @@ if(isset($_SESSION['id_usuario']) && empty($_SESSION['id_usuario'])==false){
                                     <td scope="col" class="text-center text-nowrap"> <?php echo $dado['valor_und']; ?> </td>
                                     <td scope="col" class="text-center text-nowrap"> <?php echo $dado['qtd']; ?> </td>
                                     <td scope="col" class="text-center text-nowrap"> <?php echo $dado['valor_total']; ?> </td>
-                                    <td scope="col" class="text-center text-nowrap"> <a target="_blank" href="uploads/<?php echo $dado['idlancamento'] ?>"> Anexos</a> </td>
+                                    <td scope="col" class="text-center text-nowrap"> 
+                                        <a target="_blank" href="uploads/<?php echo $dado['idlancamento'] ?>"> Anexos</a>
+                                    </td>
                                     <td scope="col" class="text-center text-nowrap"> <?php echo $dado['nome']; ?> </td>
                                     <td scope="col" class="text-center text-nowrap"> <?php echo $dado['status_atual']; ?> </td>
                                     <td scope="col" class="text-center text-nowrap">
                                         <?php
 
-                                            if($dado['usuarios_idusuarios'] == $idUsuario || $tipoUsuario==1){
+                                            if($dado['usuarios_idusuarios'] == $idUsuario || $tipoUsuario==1 || $tipoUsuario == 99){
                                         ?>
                                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal<?php echo $dado['idlancamento']; ?>" data-whatever="@mdo" value="<?php echo $dado['idlancamento']; ?>" name="idlancamento" >Visualisar</button>
                                         <?php
@@ -193,7 +195,7 @@ if(isset($_SESSION['id_usuario']) && empty($_SESSION['id_usuario'])==false){
                                 </tr>
                                 <!-- INICIO MODAL visualisar DESPESAS-->
                                 <div class="modal fade" id="modal<?php echo $dado['idlancamento']; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
+                                    <div class="modal-dialog modal-xl" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="exampleModalLabel">Despesas</h5>
@@ -208,63 +210,7 @@ if(isset($_SESSION['id_usuario']) && empty($_SESSION['id_usuario'])==false){
                                                             <label for="idLancamento" class="col-form-label">ID</label>
                                                             <input type="text" name="idLancamento" class="form-control" readonly id="idLancamento" value="<?php echo $dado['idlancamento'] ?>">
                                                         </div>
-                                                        <div class="form-group col-md-5">
-                                                            <label for="setor" class="col-form-label">Setor</label>
-                                                            <select class="form-control" name="setor" id="setor" >
-                                                                <option value="<?php echo $dado['idsetor']; ?>"><?php echo $dado['nome_setor']; ?></option>
-                                                            <?php 
-                                                            
-                                                                $setores = $db->query("SELECT * FROM setor");
-                                                                $setores =$setores->fetchAll();
-                                                                foreach($setores as $setor){
-                                                            ?>
-                                                                <option value="<?php $setor['idsetor']; ?>"> <?php echo $setor['nome_setor'] ?> </option>
-                                                            <?php        
-
-                                                                }
-                                                            
-                                                            ?>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group col-md-5">
-                                                            <label for="categoria" class="col-form-label">Categoria</label>
-                                                            <select class="form-control" name="categoria" id="categoria" >
-                                                                <option value="<?php echo $dado['idcategoria']; ?>"><?php echo $dado['nome_categoria']; ?></option>
-                                                            <?php 
-                                                            
-                                                                $setores = $db->query("SELECT * FROM categoria");
-                                                                $setores =$setores->fetchAll();
-                                                                foreach($setores as $setor){
-                                                            ?>
-                                                                <option value="<?php $setor['idcategoria']; ?>"> <?php echo $setor['nome_categoria'] ?> </option>
-                                                            <?php        
-
-                                                                }
-                                                            
-                                                            ?>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-row">
-                                                        <div class="form-group col-md-6">
-                                                            <label for="produto" class="col-form-label">Produto / Serviço</label>
-                                                            <select class="form-control" name="produto" id="produto" >
-                                                                <option value="<?php echo $dado['idpeca_servico']; ?>"><?php echo $dado['nome_peca_servico']; ?></option>
-                                                            <?php 
-                                                            
-                                                                $produtos = $db->query("SELECT * FROM produto_servico");
-                                                                $produtos =$produtos->fetchAll();
-                                                                foreach($produtos as $produto){
-                                                            ?>
-                                                                <option value="<?php $produto['idpeca_servico']; ?>"> <?php echo $produto['nome_peca_servico'] ?> </option>
-                                                            <?php        
-
-                                                                }
-                                                            
-                                                            ?>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group col-md-6">
+                                                        <div class="form-group col-md-3">
                                                             <label for="fornecedor" class="col-form-label">Fornecedor</label>
                                                             <select class="form-control" name="fornecedor" id="fornecedor" >
                                                                 <option value="<?php echo $dado['idfornecedor']; ?>"><?php echo $dado['nome_fornecedor']; ?></option>
@@ -282,25 +228,69 @@ if(isset($_SESSION['id_usuario']) && empty($_SESSION['id_usuario'])==false){
                                                             ?>
                                                             </select>
                                                         </div>
-                                                    </div>
-                                                    <div class="form-row">
-                                                        <div class="form-group col-md-4">
+                                                        <div class="form-group col-md-2">
+                                                            <label for="setor" class="col-form-label">Setor</label>
+                                                            <select class="form-control" name="setor" id="setor" >
+                                                                <option value="<?php echo $dado['idsetor']; ?>"><?php echo $dado['nome_setor']; ?></option>
+                                                            <?php 
+                                                            
+                                                                $setores = $db->query("SELECT * FROM setor");
+                                                                $setores =$setores->fetchAll();
+                                                                foreach($setores as $setor){
+                                                            ?>
+                                                                <option value="<?php $setor['idsetor']; ?>"> <?php echo $setor['nome_setor'] ?> </option>
+                                                            <?php        
+
+                                                                }
+                                                            
+                                                            ?>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group col-md-3">
+                                                            <label for="produto" class="col-form-label">Produto / Serviço</label>
+                                                            <select class="form-control" name="produto" id="produto" >
+                                                                <option value="<?php echo $dado['idpeca_servico']; ?>"><?php echo $dado['nome_peca_servico']; ?></option>
+                                                            <?php 
+                                                            
+                                                                $produtos = $db->query("SELECT * FROM produto_servico");
+                                                                $produtos =$produtos->fetchAll();
+                                                                foreach($produtos as $produto){
+                                                            ?>
+                                                                <option value="<?php $produto['idpeca_servico']; ?>"> <?php echo $produto['nome_peca_servico'] ?> </option>
+                                                            <?php        
+
+                                                                }
+                                                            
+                                                            ?>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group col-md-2">
                                                             <label for="codFabrica" class="col-form-label"> Cód. Fábrica  </label>
                                                             <input type="text" name="codFabrica" class="form-control"  id="codFabrica" value="<?php echo $dado['cod_fabrica'];  ?>">
                                                         </div>
-                                                        <div class="form-group col-md-4">
+                                                    </div>
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-1">
                                                             <label for="vlUn" class="col-form-label"> Valor Unit.  </label>
                                                             <input type="text" name="vlUn" class="form-control"  id="vlUn" value="<?php echo $dado['valor_und'];  ?>">
                                                         </div>
-                                                        <div class="form-group col-md-4">
+                                                        <div class="form-group col-md-1">
                                                             <label for="qtd" class="col-form-label"> Qtd.  </label>
                                                             <input type="text" name="qtd" class="form-control"  id="qtd" value="<?php echo $dado['qtd'];  ?>">
                                                         </div>
+                                                        <div class="form-group col-md-1">
+                                                            <label for="vlTotal" class="col-form-label"> Valor Total  </label>
+                                                            <input type="text" readonly name="vlTotal" class="form-control"  id="vlTotal" value="<?php echo $dado['valor_total'];  ?>">
+                                                        </div>
                                                     </div>   
                                                     <div class="form-row">
-                                                        <div class="form-group col-md-6">
+                                                        <div class="form-group col-md-5">
+                                                            <label for="obsOrcamento">Observações</label>
+                                                            <textarea class="form-control" name="obsOrcamento" id="obsOrcamento" > <?php echo $dado['obs_orcamento']; ?></textarea>
+                                                        </div>
+                                                        <div class="form-group col-md-4">
                                                             <label for="anexo">Inserir Anexos</label>
-                                                            <input type="file" class="form-control-file" multiple="multiple" name="anexo[]" id="anexo">
+                                                            <input type="file" class="form-control-file" multiple="multiple" value="<?php echo $dado['anexo'] ?>" name="anexo[]" id="anexo">
                                                         </div>
                                                         <?php
                                                             if($tipoUsuario==1 || $tipoUsuario == 99){
@@ -314,6 +304,10 @@ if(isset($_SESSION['id_usuario']) && empty($_SESSION['id_usuario'])==false){
                                                                     <option value="Em Análise"> Em Análise</option>
                                                                 </select>
                                                             </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label for="obsAnalise" class="col-form-label">Observações de Análise</label>
+                                                                <textarea class="form-control" name="obsAnalise" id="obsAnalise" > </textarea>
+                                                            </div>
                                                         <?php        
                                                             }
                                                         ?>
@@ -321,7 +315,7 @@ if(isset($_SESSION['id_usuario']) && empty($_SESSION['id_usuario'])==false){
                                                     </div>       
                                             </div>
                                             <div class="modal-footer">
-                                                    <a href="excluir.php?idLancamento=<?php echo $dado['idlancamento']; ?>" class="btn btn-danger" > Exclui xr </a>
+                                                    <a href="excluir.php?idLancamento=<?php echo $dado['idlancamento']; ?>" class="btn btn-danger" > Excluir </a>
                                                     <button type="submit" name="analisar" class="btn btn-primary">Atualizar</button>
                                                 </form>
                                             </div>

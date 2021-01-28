@@ -151,13 +151,20 @@ if(isset($_SESSION['id_usuario']) && empty($_SESSION['id_usuario'])==false){
 
                                     ?>
                                 </select>
-                                
                             </div>
                             <div class="icone-plus">
                                 <img src="../assets/images/icones/plus.png" data-toggle="modal" data-target="#modalCategoria" data-whatever="@mdo" value="" name="modalCategoria"> 
                             </div>
                         </div>
                         <div class="form-row">
+                            <div class="form-group col-md-6 espaco">
+                                <label for="tipoProduto">Tipo Produto</label>
+                                <select name="tipoProduto" id="tipoProduto" class="form-control">
+                                    <option value=""></option>
+                                    <option value="Patrimônio">Patrimônio</option>    
+                                    <option value="Despesa">Despesa</option>      
+                                </select>
+                            </div>
                             <div class="form-group col-md-6 espaco">
                                 <label for="codBarra">Código de Barras</label>
                                 <input type="text" class="form-control" name="codBarra" id="codBarra">
