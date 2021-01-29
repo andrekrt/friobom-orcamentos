@@ -13,7 +13,15 @@ if( isset($_SESSION['id_usuario']) && empty($_SESSION['id_usuario'])==false){
     $codFabricas = $_POST['codFabrica'];
     $valorUn = str_replace(",", ".", $_POST['vlUn']) ;
     $qtd = str_replace(",", ".", $_POST['qtd']) ;
-    $statusAtual = "Em Análise";
+    if($_SESSION['tipo_usuario'] == 99){
+
+        $statusAtual = "Aprovado";
+
+    }else{
+
+        $statusAtual = "Em Análise";
+
+    }    
     $anexo = $_FILES['anexo'];
     $anexo_nome = $anexo['name'][0];
     $obsOrcamento = $_POST['obsOrcamento'];
