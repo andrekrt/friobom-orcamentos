@@ -66,7 +66,7 @@ if( isset($_SESSION['id_usuario']) && empty($_SESSION['id_usuario'])==false){
 
             }
             echo "<script>alert('Despesa Solicitada!');</script>";
-            echo "<script>window.location.href='despesas.php'</script>";
+            echo "<script>window.location.href='form-nova-despesa.php'</script>";
         }else{
             print_r($db->errorInfo());
             
